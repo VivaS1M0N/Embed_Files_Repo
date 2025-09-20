@@ -1,68 +1,46 @@
 <!DOCTYPE html>
-const grid = $('#grid'); grid.innerHTML = '';
-if(!state.images.length){ $('#empty').classList.remove('hidden'); return; }
-$('#empty').classList.add('hidden');
-
-
-state.images.forEach((src, idx) => {
-const it = document.createElement('div'); it.className = 'item'; it.draggable = true; it.dataset.index = idx;
-const img = document.createElement('img'); img.src = src; img.alt = 'imagen ' + (idx+1);
-const bar = document.createElement('div'); bar.className = 'bar';
-const del = document.createElement('button'); del.className = 'btn-sm btn-danger'; del.textContent = 'Eliminar'; del.title = 'Eliminar';
-del.onclick = () => { state.images.splice(idx,1); save(); renderAll(); };
-const drag = document.createElement('button'); drag.className = 'btn-sm btn-drag'; drag.textContent = 'Mover'; drag.title = 'Arrastrar para reordenar';
-bar.appendChild(drag); bar.appendChild(del);
-it.appendChild(img); it.appendChild(bar);
-
-
-// Drag & drop
-it.addEventListener('dragstart', e => { e.dataTransfer.setData('text/plain', idx.toString()); });
-it.addEventListener('dragover', e => e.preventDefault());
-it.addEventListener('drop', e => {
-e.preventDefault();
-const from = parseInt(e.dataTransfer.getData('text/plain'),10);
-const to = idx; if(from===to) return;
-const [m] = state.images.splice(from,1); state.images.splice(to,0,m);
-save(); renderAll();
-});
-grid.appendChild(it);
-});
-}
-
-
-// Eventos UI
-$('#add').onclick = () => { const u = $('#url').value.trim(); if(!u) return; state.images.push(u); $('#url').value=''; save(); renderAll(); };
-$('#clear').onclick = () => { if(confirm('¿Vaciar todas las imágenes?')){ state.images = []; save(); renderAll(); } };
-$('#pad').oninput = e => { state.pad = parseInt(e.target.value||'14',10); save(); renderAll(); };
-$('#radius').oninput = e => { state.radius = parseInt(e.target.value||'16',10); save(); renderAll(); };
-$('#height').oninput = e => { state.itemHeight = parseInt(e.target.value||'170',10); save(); renderAll(); };
-
-
-// Pegar URL en cualquier lugar
-window.addEventListener('paste', e => {
-const text = (e.clipboardData || window.clipboardData).getData('text');
-if(/^https?:\/\//i.test(text)){ state.images.push(text.trim()); save(); renderAll(); }
-});
-
-
-// Adaptación automática a tamaño del iframe (modo compacto + tamaños)
-const card = $('#card');
-const ro = new ResizeObserver(entries => {
-for(const entry of entries){
-const w = entry.contentRect.width; const h = entry.contentRect.height;
-// Botones compactos si el ancho es pequeño
-document.body.classList.toggle('compact', w < 460);
-// Grid más apretado si es muy pequeño
-document.body.classList.toggle('tiny', w < 360 || h < 280);
-// Ajuste suave de altura de tarjetas según alto disponible
-if(h < 420) state.itemHeight = 130; else if(h < 560) state.itemHeight = 150; else state.itemHeight = Math.max(170, state.itemHeight);
-setVar('--item-h', state.itemHeight + 'px');
-}
-});
-ro.observe(card);
-
-
-load();
-</script>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Imagen única desde GitHub Pages</title>
+  <style>
+    html, body {
+      margin: 0;
+      height: 100%;
+    }
+    body {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      background: #0b1220; /* fondo oscuro */
+    }
+    .frame {
+      max-width: 100%;
+      max-height: 100%;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    img {
+      display: block;
+      max-width: 100%;
+      height: auto;
+      border-radius: 16px;
+    }
+    figcaption {
+      text-align: center;
+      color: #e5e7eb;
+      margin-top: 8px;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+  <figure class="frame">
+    <!-- Reemplaza la URL con tu propia imagen -->
+    <img src="https://vivas1m0n.github.io/Embed_Files_Repo/images/logo%20redesign.png" alt="Imagen desde GitHub Pages" />
+    <figcaption>Decoración del Dashboard</figcaption>
+  </figure>
 </body>
 </html>
