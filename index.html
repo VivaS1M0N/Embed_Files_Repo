@@ -6,251 +6,261 @@
   <title>Tarjeta de Recursos</title>
   <style>
     :root {
-      --gap: 12px;
-      --radius: 16px;
-      --pad: 14px;
-      --shadow: 0 10px 30px rgba(0,0,0,.10);
-      --bg: #0b1220;
-      --panel: #0e172a;
-      --muted: #94a3b8;
-      --text: #e2e8f0;
-      --accent: #7c93ff;
+      --radius: 14px;
+      --pad: 16px;
+      --gap: 6px;
+      --muted: rgba(255,255,255,0.55);
+      --surface: var(--cu-panel-color, rgba(15,23,42,0.58));
+      --surface-border: var(--cu-panel-border, rgba(255,255,255,0.12));
+      --text: var(--cu-text-color, #f1f5f9);
+      --accent: var(--cu-accent-color, #9da7ff);
+      --badge-bg: rgba(255,255,255,0.08);
+      --badge-text: rgba(255,255,255,0.7);
+      --avatar-bg: rgba(255,255,255,0.12);
+      color-scheme: dark;
     }
     * {
       box-sizing: border-box;
     }
-    html, body {
+    html,
+    body {
       height: 100%;
       margin: 0;
     }
     body {
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
-      background: var(--bg);
+      font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+      background: transparent;
       color: var(--text);
       display: flex;
       align-items: stretch;
       justify-content: stretch;
+      font-size: 13px;
+      line-height: 1.5;
     }
     .card {
       width: 100%;
       height: 100%;
-      padding: var(--pad);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      background: linear-gradient(180deg, rgba(255,255,255,.02), rgba(255,255,255,.00));
       display: flex;
       flex-direction: column;
-      gap: var(--gap);
+      gap: 12px;
+      padding: var(--pad);
+      border-radius: var(--radius);
+      background: var(--surface);
+      border: 1px solid var(--surface-border);
+      backdrop-filter: saturate(160%) blur(18px);
     }
     header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 12px;
     }
     h1 {
-      font-size: 16px;
+      font-size: 15px;
       margin: 0;
-      letter-spacing: .2px;
-      font-weight: 700;
-    }
-    .controls {
+      font-weight: 600;
+      letter-spacing: 0.2px;
       display: flex;
       align-items: center;
-      gap: 8px;
-      flex-wrap: wrap;
+      gap: 6px;
     }
-    .controls-group {
+    .owner-tools {
       display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      background: rgba(15, 23, 42, 0.6);
-      padding: 12px;
-      border-radius: 14px;
-      border: 1px solid #23304a;
+      align-items: center;
+      gap: 6px;
     }
-    .controls label {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.6px;
-      display: block;
-      color: #cbd5e1;
-      margin-bottom: 6px;
-    }
-    .controls input[type="text"],
-    .controls input[type="url"],
-    .controls input[type="file"],
-    .controls select {
-      min-width: 180px;
-      flex: 1 1 220px;
-      max-width: 320px;
-      background: #0f172a;
-      border: 1px solid #23304a;
+    .icon-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(15,23,42,0.3);
       color: var(--text);
-      padding: 10px 12px;
-      border-radius: 12px;
-      outline: none;
-    }
-    .controls input[type="file"] {
-      padding: 8px 12px;
-    }
-    .btn {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      border: 0;
-      padding: 10px 12px;
-      border-radius: 12px;
+      justify-content: center;
       cursor: pointer;
-      font-weight: 700;
+      transition: background 0.15s ease;
     }
-    .btn.primary {
-      background: var(--accent);
-      color: #0b1220;
+    .icon-btn:hover {
+      background: rgba(255,255,255,0.08);
     }
-    .btn.ghost {
-      background: #111827;
-      color: #cbd5e1;
-      border: 1px solid #23304a;
-    }
-    .icon {
-      width: 16px;
-      height: 16px;
-      display: inline-block;
-    }
-    .compact .btn span.label {
-      display: none;
-    }
-    .grid {
+    .panel {
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.07);
+      background: rgba(15,23,42,0.55);
+      padding: 14px;
       display: grid;
-      gap: var(--gap);
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 14px;
     }
-    .item {
-      position: relative;
-      border-radius: 16px;
-      overflow: hidden;
-      background: #0f172a;
-      border: 1px solid #23304a;
-      padding: 16px;
+    .panel-row {
+      display: grid;
+      gap: 8px;
+    }
+    .panel label {
+      text-transform: uppercase;
+      font-size: 10px;
+      letter-spacing: 0.5px;
+      color: var(--muted);
+    }
+    .panel input,
+    .panel select {
+      width: 100%;
+      padding: 8px 10px;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.2);
+      background: rgba(15,23,42,0.65);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+    }
+    .panel-actions {
       display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .panel-actions button {
+      flex: 1 1 auto;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(148,163,184,0.25);
+      background: rgba(148,163,184,0.08);
+      color: var(--text);
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .panel-actions button.primary {
+      background: linear-gradient(130deg, rgba(124,147,255,0.9), rgba(151,173,255,0.75));
+      color: #0b1220;
+      border-color: transparent;
+    }
+    .panel-actions button.danger {
+      color: #fda4af;
+      background: rgba(239,68,68,0.1);
+      border-color: rgba(239,68,68,0.18);
+    }
+    .drawer {
+      display: none;
       flex-direction: column;
       gap: 12px;
     }
-    .item .file-preview {
+    .drawer.open {
       display: flex;
-      align-items: center;
-      justify-content: center;
-      width: 64px;
-      height: 64px;
-      border-radius: 14px;
-      background: rgba(148, 163, 184, 0.08);
-      font-size: 30px;
-      color: var(--accent);
-    }
-    .item .meta {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-    .item .meta strong {
-      font-size: 15px;
-      letter-spacing: .2px;
-    }
-    .item .meta span {
-      font-size: 13px;
-      color: var(--muted);
-    }
-    .item .actions {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-    .bar {
-      display: flex;
-      gap: 6px;
-      justify-content: flex-end;
-      margin-top: auto;
-    }
-    .btn-sm {
-      padding: 6px 8px;
-      border-radius: 10px;
-      font-size: 12px;
-    }
-    .btn-danger {
-      background: #fee2e2;
-      color: #991b1b;
-    }
-    .btn-drag {
-      background: #e0f2fe;
-      color: #075985;
-      cursor: grab;
-    }
-    .btn-action {
-      background: #1e293b;
-      color: #93c5fd;
-      text-decoration: none;
-      border: 1px solid #23304a;
-      padding: 6px 10px;
-      border-radius: 10px;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .btn-action:hover {
-      background: #273549;
-    }
-    .chip-label {
-      display: inline-flex;
-      align-items: center;
-      padding: 6px 10px;
-      border-radius: 10px;
-      background: rgba(148, 163, 184, 0.12);
-      color: #cbd5e1;
-      font-size: 12px;
     }
     .muted {
       color: var(--muted);
+      font-size: 12px;
+    }
+    #empty {
+      padding: 12px 0 4px;
+    }
+    ul.resources {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .resource {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-radius: 10px;
+      padding: 6px 8px;
+      transition: background 0.15s ease;
+    }
+    .resource:hover {
+      background: rgba(255,255,255,0.05);
+    }
+    .resource.dragging {
+      opacity: 0.45;
+    }
+    .resource a {
+      flex: 1 1 auto;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+      color: inherit;
+      min-width: 0;
+    }
+    .badge {
+      min-width: 36px;
+      padding: 4px 6px;
+      border-radius: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      font-size: 10px;
+      text-align: center;
+      background: var(--badge-bg);
+      color: var(--badge-text);
+      font-weight: 600;
+    }
+    .primary-text {
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
       font-size: 13px;
+    }
+    .secondary-text {
+      font-size: 11px;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      flex: 1 1 auto;
+      min-width: 0;
+    }
+    .avatar {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.85);
+      background: var(--avatar-bg);
+    }
+    .owner-actions {
+      display: flex;
+      gap: 4px;
+    }
+    .tiny-btn {
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      border: 1px solid rgba(148,163,184,0.2);
+      background: rgba(15,23,42,0.4);
+      color: var(--text);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .tiny-btn:hover {
+      background: rgba(255,255,255,0.08);
     }
     .hidden {
       display: none !important;
     }
-    footer {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-    .kv {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: #0f172a;
-      border: 1px solid #23304a;
-      border-radius: 12px;
-      padding: 6px 10px;
-    }
-    .kv input {
-      width: 64px;
-      text-align: center;
-      background: transparent;
-      color: var(--text);
-      border: 0;
-      outline: none;
-    }
-    .sep {
-      flex: 1 1 auto;
-      height: 1px;
-      background: #23304a;
-    }
-    @media (max-width: 520px) {
-      .controls input[type="text"],
-      .controls input[type="url"],
-      .controls select,
-      .controls input[type="file"] {
-        flex: 1 1 100%;
+    @media (max-width: 480px) {
+      body {
+        font-size: 12px;
+      }
+      h1 {
+        font-size: 14px;
+      }
+      .card {
+        padding: 14px;
       }
     }
   </style>
@@ -259,64 +269,54 @@
   <div class="card" id="card">
     <header>
       <h1 id="title">Recursos</h1>
-      <div class="controls" id="controls">
-        <div class="controls-group">
-          <div>
-            <label for="file">Subir archivo</label>
-            <input id="file" type="file" multiple />
-          </div>
-          <button id="upload" class="btn primary" title="Añadir archivo">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 4v12m0 0 4-4m-4 4-4-4m-2 8h12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="label">Subir</span>
-          </button>
-        </div>
-        <div class="controls-group">
-          <div>
-            <label for="shortcut-name">Nombre del acceso</label>
-            <input id="shortcut-name" type="text" placeholder="Ej. Diseño Sprint" />
-          </div>
-          <div>
-            <label for="shortcut-url">URL de la lista o carpeta</label>
-            <input id="shortcut-url" type="url" placeholder="https://app.clickup.com/..." />
-          </div>
-          <div>
-            <label for="shortcut-kind">Tipo</label>
-            <select id="shortcut-kind">
-              <option value="lista">Lista</option>
-              <option value="carpeta">Carpeta</option>
-              <option value="otro">Otro</option>
-            </select>
-          </div>
-          <button id="add-shortcut" class="btn ghost" title="Añadir acceso directo">
-            <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m7 11 3 3 7-7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            <span class="label">Añadir acceso</span>
-          </button>
-        </div>
-        <button id="clear" class="btn ghost" title="Vaciar todas">
-          <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 6h18M8 6V4h8v2m-1 0v14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V6h10z" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          <span class="label">Vaciar</span>
+      <div class="owner-tools hidden" id="owner-tools">
+        <button class="icon-btn" id="toggle-drawer" title="Abrir panel de edición">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5v14m7-7H5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
     </header>
 
-    <div id="empty" class="muted">Sube archivos para tenerlos a mano o crea accesos directos hacia listas y carpetas de otros espacios.</div>
-    <div class="grid" id="grid"></div>
+    <div class="drawer" id="drawer">
+      <div class="panel">
+        <div class="panel-row">
+          <label for="file">Subir archivo</label>
+          <input id="file" type="file" multiple />
+          <div class="panel-actions">
+            <button class="primary" id="upload">Añadir archivo</button>
+          </div>
+        </div>
+        <div class="panel-row">
+          <label for="shortcut-name">Nuevo acceso</label>
+          <input id="shortcut-name" type="text" placeholder="Ej. Manual de marca" />
+          <input id="shortcut-url" type="url" placeholder="https://app.clickup.com/..." />
+          <select id="shortcut-kind">
+            <option value="lista">Lista</option>
+            <option value="carpeta">Carpeta</option>
+            <option value="documento">Documento</option>
+            <option value="otro">Otro</option>
+          </select>
+          <div class="panel-actions">
+            <button id="add-shortcut">Guardar acceso</button>
+          </div>
+        </div>
+        <div class="panel-actions">
+          <button class="danger" id="clear">Vaciar todo</button>
+        </div>
+      </div>
+    </div>
 
-    <footer id="footer">
-      <span class="kv">Pad <input id="pad" type="number" min="0" step="2" value="14" />px</span>
-      <span class="kv">Radio <input id="radius" type="number" min="0" step="2" value="16" />px</span>
-      <div class="sep"></div>
-      <span class="muted">Tip: `?title=Mis+recursos` · `?edit=0`</span>
-    </footer>
+    <div id="empty" class="muted">Añade archivos o accesos para que todo tu equipo pueda consultarlos aquí.</div>
+    <ul class="resources" id="list"></ul>
   </div>
 
   <script>
     const params = new URLSearchParams(location.search);
     const storageKey = 'clickup_resources_card:' + (params.get('key') || location.pathname);
-    const state = { resources: [], pad: 14, radius: 16 };
+    const state = { resources: [] };
 
     const $ = (q) => document.querySelector(q);
-    const setVar = (name, v) => document.documentElement.style.setProperty(name, v);
+    const ownerMode = (params.get('owner') === '1') || (params.get('edit') === '1');
+    const viewOnly = !ownerMode;
 
     function load() {
       try {
@@ -344,18 +344,11 @@
 
     function renderAll() {
       $('#title').textContent = decodeURIComponent(params.get('title') || 'Recursos');
-      const edit = params.get('edit');
-      const on = (edit === null || edit === '1');
-      $('#controls').classList.toggle('hidden', !on);
-      $('#footer').classList.toggle('hidden', !on);
+      $('#owner-tools').classList.toggle('hidden', viewOnly);
+      $('#drawer').classList.toggle('open', ownerMode && drawerOpen);
 
-      setVar('--pad', state.pad + 'px');
-      setVar('--radius', state.radius + 'px');
-      $('#pad').value = state.pad;
-      $('#radius').value = state.radius;
-
-      const grid = $('#grid');
-      grid.innerHTML = '';
+      const list = $('#list');
+      list.innerHTML = '';
       if (!state.resources.length) {
         $('#empty').classList.remove('hidden');
         return;
@@ -363,108 +356,109 @@
       $('#empty').classList.add('hidden');
 
       state.resources.forEach((item, idx) => {
-        const it = document.createElement('div');
-        it.className = 'item';
-        it.draggable = true;
-        it.dataset.index = idx;
+        const li = document.createElement('li');
+        li.className = 'resource';
+        li.draggable = ownerMode;
+        li.dataset.index = idx;
 
-        const top = document.createElement('div');
-        top.style.display = 'flex';
-        top.style.alignItems = 'center';
-        top.style.gap = '14px';
+        const link = document.createElement('a');
+        link.draggable = false;
+        if (item.type === 'file') {
+          link.href = item.data;
+          link.download = item.name;
+        } else {
+          link.href = item.url;
+          link.target = '_blank';
+          link.rel = 'noopener';
+        }
 
-        const preview = document.createElement('div');
-        preview.className = 'file-preview';
+        const badge = document.createElement('span');
+        badge.className = 'badge';
+        if (item.type === 'file') {
+          badge.textContent = fileLabel(item.name);
+        } else {
+          const label = (item.kind || 'enlace').toString().trim().toUpperCase();
+          badge.textContent = label.length > 6 ? label.slice(0, 6) : label || 'LINK';
+        }
 
         const meta = document.createElement('div');
         meta.className = 'meta';
+        const primary = document.createElement('span');
+        primary.className = 'primary-text';
+        primary.textContent = item.name;
+        const secondary = document.createElement('span');
+        secondary.className = 'secondary-text';
+        secondary.textContent = item.type === 'file' ? formatBytes(item.size) : compactUrl(item.url);
+        meta.appendChild(primary);
+        meta.appendChild(secondary);
 
-        if (item.type === 'file') {
-          preview.textContent = extToIcon(item.name);
-          const strong = document.createElement('strong');
-          strong.textContent = item.name;
-          const span = document.createElement('span');
-          span.textContent = formatBytes(item.size);
-          meta.appendChild(strong);
-          meta.appendChild(span);
-        } else {
-          preview.innerHTML = '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m11 7 6-3v16l-6-3m0-10-6-3v16l6-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-          const strong = document.createElement('strong');
-          strong.textContent = item.name;
-          const spanKind = document.createElement('span');
-          spanKind.textContent = 'Acceso a ' + (item.kind || 'enlace');
-          const spanUrl = document.createElement('span');
-          spanUrl.textContent = compactUrl(item.url);
-          meta.appendChild(strong);
-          meta.appendChild(spanKind);
-          meta.appendChild(spanUrl);
+        const avatar = document.createElement('span');
+        avatar.className = 'avatar';
+        avatar.textContent = avatarText(item);
+
+        link.appendChild(badge);
+        link.appendChild(meta);
+        link.appendChild(avatar);
+        li.appendChild(link);
+
+        if (ownerMode) {
+          const ownerBar = document.createElement('div');
+          ownerBar.className = 'owner-actions';
+
+          const drag = document.createElement('button');
+          drag.className = 'tiny-btn';
+          drag.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M10 4h4m-4 6h4m-4 6h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+          drag.title = 'Mover';
+          drag.addEventListener('click', e => e.preventDefault());
+
+          const del = document.createElement('button');
+          del.className = 'tiny-btn';
+          del.title = 'Eliminar';
+          del.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="m6 6 12 12M6 18 18 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+          del.onclick = (ev) => {
+            ev.preventDefault();
+            ev.stopPropagation();
+            state.resources.splice(idx, 1);
+            save();
+            renderAll();
+          };
+
+          ownerBar.appendChild(drag);
+          ownerBar.appendChild(del);
+          li.appendChild(ownerBar);
         }
 
-        top.appendChild(preview);
-        top.appendChild(meta);
-        it.appendChild(top);
-
-        const actions = document.createElement('div');
-        actions.className = 'actions';
-
-        if (item.type === 'file') {
-          const download = document.createElement('a');
-          download.className = 'btn-action';
-          download.textContent = 'Descargar';
-          download.href = item.data;
-          download.download = item.name;
-          actions.appendChild(download);
-        } else {
-          const open = document.createElement('a');
-          open.className = 'btn-action';
-          open.textContent = 'Abrir';
-          open.href = item.url;
-          open.target = '_blank';
-          open.rel = 'noopener';
-          actions.appendChild(open);
+        if (ownerMode) {
+          li.addEventListener('dragstart', e => {
+            e.dataTransfer.setData('text/plain', idx.toString());
+            e.dataTransfer.effectAllowed = 'move';
+            requestAnimationFrame(() => li.classList.add('dragging'));
+          });
+          li.addEventListener('dragend', () => {
+            li.classList.remove('dragging');
+          });
+          li.addEventListener('dragover', e => {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+          });
+          li.addEventListener('drop', e => {
+            e.preventDefault();
+            const from = parseInt(e.dataTransfer.getData('text/plain'), 10);
+            if (Number.isNaN(from)) return;
+            const rect = li.getBoundingClientRect();
+            const after = (e.clientY - rect.top) > rect.height / 2;
+            let target = idx + (after ? 1 : 0);
+            const [m] = state.resources.splice(from, 1);
+            if (from < target) target -= 1;
+            if (target < 0) target = 0;
+            if (target > state.resources.length) target = state.resources.length;
+            state.resources.splice(target, 0, m);
+            save();
+            renderAll();
+          });
         }
 
-        const bar = document.createElement('div');
-        bar.className = 'bar';
-
-        const drag = document.createElement('button');
-        drag.className = 'btn-sm btn-drag';
-        drag.textContent = 'Mover';
-
-        const del = document.createElement('button');
-        del.className = 'btn-sm btn-danger';
-        del.textContent = 'Eliminar';
-        del.onclick = () => {
-          state.resources.splice(idx, 1);
-          save();
-          renderAll();
-        };
-
-        const chip = document.createElement('span');
-        chip.className = 'chip-label';
-        chip.textContent = item.type === 'file' ? 'Archivo' : 'Acceso';
-
-        actions.appendChild(chip);
-        it.appendChild(actions);
-
-        it.addEventListener('dragstart', e => {
-          e.dataTransfer.setData('text/plain', idx.toString());
-        });
-        it.addEventListener('dragover', e => e.preventDefault());
-        it.addEventListener('drop', e => {
-          e.preventDefault();
-          const from = parseInt(e.dataTransfer.getData('text/plain'), 10);
-          const to = idx;
-          if (from === to) return;
-          const [m] = state.resources.splice(from, 1);
-          state.resources.splice(to, 0, m);
-          save();
-          renderAll();
-        });
-        bar.appendChild(drag);
-        bar.appendChild(del);
-        it.appendChild(bar);
-        grid.appendChild(it);
+        list.appendChild(li);
       });
     }
 
@@ -492,57 +486,49 @@
       });
     }
 
-    $('#upload').onclick = () => {
-      const input = $('#file');
-      if (!input.files.length) {
-        input.click();
-        return;
-      }
-      handleFiles(input.files);
-    };
 
-    $('#file').addEventListener('change', e => {
-      handleFiles(e.target.files);
-    });
+    if (!viewOnly) {
+      $('#upload').onclick = () => {
+        const input = $('#file');
+        if (!input.files.length) {
+          input.click();
+          return;
+        }
+        handleFiles(input.files);
+      };
 
-    $('#add-shortcut').onclick = () => {
-      const name = $('#shortcut-name').value.trim();
-      const url = $('#shortcut-url').value.trim();
-      const kind = $('#shortcut-kind').value;
-      if (!name || !url) return;
-      state.resources.push({ type: 'shortcut', name, url, kind, addedAt: Date.now() });
-      $('#shortcut-name').value = '';
-      $('#shortcut-url').value = '';
-      $('#shortcut-kind').value = 'lista';
-      save();
-      renderAll();
-    };
-    $('#clear').onclick = () => {
-      if (confirm('¿Vaciar todos los recursos?')) {
-        state.resources = [];
+      $('#file').addEventListener('change', e => {
+        handleFiles(e.target.files);
+      });
+
+      $('#add-shortcut').onclick = () => {
+        const name = $('#shortcut-name').value.trim();
+        const url = $('#shortcut-url').value.trim();
+        const kind = ($('#shortcut-kind').value || 'link').toLowerCase();
+        if (!name || !url) return;
+        state.resources.push({ type: 'shortcut', name, url, kind, addedAt: Date.now() });
+        $('#shortcut-name').value = '';
+        $('#shortcut-url').value = '';
+        $('#shortcut-kind').value = 'lista';
         save();
         renderAll();
-      }
-    };
-    $('#pad').oninput = e => {
-      state.pad = parseInt(e.target.value || '14', 10);
-      save();
-      renderAll();
-    };
-    $('#radius').oninput = e => {
-      state.radius = parseInt(e.target.value || '16', 10);
-      save();
-      renderAll();
-    };
+      };
+
+      $('#clear').onclick = () => {
+        if (confirm('¿Vaciar todos los recursos?')) {
+          state.resources = [];
+          save();
+          renderAll();
+        }
+      };
+
+      $('#toggle-drawer').addEventListener('click', () => {
+        drawerOpen = !drawerOpen;
+        renderAll();
+      });
+    }
+
     const card = $('#card');
-    const ro = new ResizeObserver(entries => {
-      for (const entry of entries) {
-        const w = entry.contentRect.width;
-        const h = entry.contentRect.height;
-        document.body.classList.toggle('compact', w < 460);
-        document.body.classList.toggle('tiny', w < 360 || h < 280);
-      }
-    });
     card.addEventListener('dragover', e => {
       if (e.dataTransfer && (e.dataTransfer.files.length || e.dataTransfer.types.includes('text/uri-list'))) {
         e.preventDefault();
@@ -551,9 +537,9 @@
     card.addEventListener('drop', e => {
       if (!e.dataTransfer) return;
       e.preventDefault();
-      if (e.dataTransfer.files.length) {
+      if (!viewOnly && e.dataTransfer.files.length) {
         handleFiles(e.dataTransfer.files);
-      } else {
+      } else if (!viewOnly) {
         const text = e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text/plain');
         if (text && /^https?:\/\//i.test(text.trim())) {
           const link = text.trim();
@@ -565,14 +551,13 @@
     });
     window.addEventListener('paste', e => {
       const text = (e.clipboardData || window.clipboardData).getData('text');
-      if (text && /^https?:\/\//i.test(text.trim())) {
+      if (!viewOnly && text && /^https?:\/\//i.test(text.trim())) {
         const link = text.trim();
         state.resources.push({ type: 'shortcut', name: friendlyName(link) || link, url: link, kind: 'enlace', addedAt: Date.now() });
         save();
         renderAll();
       }
     });
-    ro.observe(card);
 
     function formatBytes(bytes) {
       if (!bytes && bytes !== 0) return '';
@@ -609,21 +594,22 @@
       return str.replace(/\b\w+/g, txt => txt.charAt(0).toUpperCase() + txt.slice(1));
     }
 
-    function extToIcon(name) {
+    function fileLabel(name) {
       const ext = (name.split('.').pop() || '').toLowerCase();
-      const map = {
-        pdf: '📄',
-        doc: '📝', docx: '📝',
-        xls: '📊', xlsx: '📊', csv: '📊',
-        ppt: '📽️', pptx: '📽️',
-        zip: '🗜️', rar: '🗜️',
-        jpg: '🖼️', jpeg: '🖼️', png: '🖼️', gif: '🖼️', svg: '🖼️',
-        mp4: '🎞️', mov: '🎞️', avi: '🎞️',
-        mp3: '🎵', wav: '🎵',
-        txt: '📄', md: '📄'
-      };
-      return map[ext] || '📦';
+      if (!ext) return 'FILE';
+      return ext.slice(0, 4).toUpperCase();
     }
+
+    function avatarText(item) {
+      const base = item.type === 'file' ? (item.name || '') : (item.name || item.url || '');
+      const sanitized = base.replace(/\.[a-z0-9]{2,6}$/i, '');
+      const words = sanitized.split(/[\s_\-\/]+/).filter(Boolean).filter(word => /[\p{L}\p{N}]/u.test(word));
+      if (!words.length) return '•';
+      const initials = words.length >= 2 ? (words[0][0] + words[1][0]) : words[0].slice(0, 2);
+      return initials.toUpperCase();
+    }
+
+    let drawerOpen = ownerMode;
 
     load();
   </script>
