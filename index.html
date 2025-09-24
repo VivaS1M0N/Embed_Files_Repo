@@ -6,18 +6,15 @@
   <title>Tarjeta de Recursos</title>
   <style>
     :root {
-      --radius: 14px;
-      --pad: 16px;
-      --gap: 6px;
-      --muted: rgba(255,255,255,0.55);
-      --surface: var(--cu-panel-color, transparent);
-      --surface-border: var(--cu-panel-border, rgba(148,163,184,0.22));
-      --surface-backdrop: var(--cu-panel-backdrop, saturate(160%) blur(18px));
-      --text: var(--cu-text-color, #f1f5f9);
-      --accent: var(--cu-accent-color, #9da7ff);
-      --badge-bg: rgba(255,255,255,0.08);
-      --badge-text: rgba(255,255,255,0.7);
-      --avatar-bg: rgba(255,255,255,0.12);
+      --pad: 12px;
+      --muted: rgba(226, 232, 240, 0.64);
+      --text: var(--cu-text-color, #e2e8f0);
+      --accent: var(--cu-accent-color, #94a3ff);
+      --row-hover: rgba(148, 163, 184, 0.14);
+      --row-border: rgba(148, 163, 184, 0.18);
+      --badge-bg: rgba(148, 163, 184, 0.16);
+      --badge-text: rgba(226, 232, 240, 0.78);
+      --avatar-bg: rgba(148, 163, 184, 0.25);
       color-scheme: dark;
     }
     * {
@@ -26,133 +23,141 @@
     html,
     body {
       margin: 0;
+      padding: 0;
     }
     body {
       font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
+      font-size: 13px;
+      line-height: 1.5;
       background: transparent;
       color: var(--text);
       display: flex;
-      align-items: stretch;
-      justify-content: stretch;
-      font-size: 13px;
-      line-height: 1.5;
+      width: 100%;
+      min-height: 100%;
     }
     .card {
       width: 100%;
+      flex: 1 1 auto;
+      min-height: 100%;
       display: flex;
       flex-direction: column;
       gap: 12px;
-      padding: var(--pad);
-      border-radius: var(--radius);
-      background-color: var(--surface, transparent);
-      border: 1px solid rgba(148,163,184,0.18);
-      border-color: var(--surface-border);
-      backdrop-filter: var(--surface-backdrop);
+      padding: var(--pad) 0;
     }
-    header {
+    .owner-bar {
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
+      justify-content: flex-end;
+      padding: 0 var(--pad);
     }
-    h1 {
-      font-size: 15px;
-      margin: 0;
-      font-weight: 600;
-      letter-spacing: 0.2px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .owner-tools {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .icon-btn {
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-      border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(15,23,42,0.3);
-      color: var(--text);
+    .ghost-btn {
       display: inline-flex;
       align-items: center;
-      justify-content: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: rgba(148, 163, 184, 0.12);
+      color: inherit;
+      font-size: 12px;
+      font-weight: 500;
       cursor: pointer;
-      transition: background 0.15s ease;
+      transition: background 0.15s ease, border-color 0.15s ease;
     }
-    .icon-btn:hover {
-      background: rgba(255,255,255,0.08);
+    .ghost-btn.locked {
+      background: rgba(148, 163, 184, 0.08);
     }
-    .panel {
-      border-radius: 12px;
-      border: 1px solid rgba(255,255,255,0.07);
-      background: rgba(15,23,42,0.55);
-      padding: 14px;
-      display: grid;
+    .ghost-btn[data-state='ready'] {
+      background: rgba(148, 163, 184, 0.18);
+      border-color: rgba(148, 163, 184, 0.24);
+    }
+    .ghost-btn[data-state='open'] {
+      background: rgba(148, 163, 184, 0.28);
+      border-color: rgba(148, 163, 184, 0.3);
+    }
+    .ghost-btn:hover {
+      background: rgba(148, 163, 184, 0.2);
+      border-color: rgba(148, 163, 184, 0.22);
+    }
+    .ghost-btn svg {
+      opacity: 0.85;
+    }
+    .drawer {
+      margin: 0 var(--pad);
+      display: none;
+      flex-direction: column;
       gap: 14px;
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(15, 23, 42, 0.34);
+      border: 1px solid rgba(148, 163, 184, 0.18);
     }
-    .panel-row {
+    .drawer.open {
+      display: flex;
+    }
+    .drawer h2 {
+      margin: 0;
+      font-size: 12px;
+      letter-spacing: 0.4px;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .form-group {
       display: grid;
       gap: 8px;
     }
-    .panel label {
+    .form-group label {
+      font-size: 11px;
       text-transform: uppercase;
-      font-size: 10px;
-      letter-spacing: 0.5px;
+      letter-spacing: 0.4px;
       color: var(--muted);
     }
-    .panel input,
-    .panel select {
+    .form-group input,
+    .form-group select {
       width: 100%;
       padding: 8px 10px;
       border-radius: 10px;
-      border: 1px solid rgba(148,163,184,0.2);
-      background: rgba(15,23,42,0.65);
-      color: var(--text);
+      border: 1px solid rgba(148, 163, 184, 0.25);
+      background: rgba(15, 23, 42, 0.55);
+      color: inherit;
       font-size: 13px;
       outline: none;
     }
-    .panel-actions {
+    .form-actions {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
     }
-    .panel-actions button {
+    .form-actions button {
       flex: 1 1 auto;
       padding: 8px 12px;
       border-radius: 10px;
-      border: 1px solid rgba(148,163,184,0.25);
-      background: rgba(148,163,184,0.08);
-      color: var(--text);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      background: rgba(148, 163, 184, 0.16);
+      color: inherit;
       font-weight: 600;
       cursor: pointer;
+      transition: background 0.15s ease;
     }
-    .panel-actions button.primary {
-      background: linear-gradient(130deg, rgba(124,147,255,0.9), rgba(151,173,255,0.75));
-      color: #0b1220;
+    .form-actions button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .form-actions button.primary {
+      background: linear-gradient(135deg, rgba(148, 163, 255, 0.95), rgba(118, 134, 255, 0.8));
       border-color: transparent;
+      color: #0b1220;
     }
-    .panel-actions button.danger {
-      color: #fda4af;
-      background: rgba(239,68,68,0.1);
-      border-color: rgba(239,68,68,0.18);
-    }
-    .drawer {
-      display: none;
-      flex-direction: column;
-      gap: 12px;
-    }
-    .drawer.open {
-      display: flex;
+    .form-actions button.danger {
+      color: #fecdd3;
+      background: rgba(239, 68, 68, 0.18);
+      border-color: rgba(239, 68, 68, 0.24);
     }
     .muted {
       color: var(--muted);
       font-size: 12px;
     }
     #empty {
-      padding: 12px 0 4px;
+      padding: 12px var(--pad) 0;
     }
     ul.resources {
       list-style: none;
@@ -160,18 +165,22 @@
       padding: 0;
       display: flex;
       flex-direction: column;
-      gap: 2px;
+      gap: 4px;
     }
     .resource {
       display: flex;
       align-items: center;
       gap: 12px;
+      padding: 6px var(--pad);
+      border-bottom: 1px solid transparent;
       border-radius: 10px;
-      padding: 6px 8px;
       transition: background 0.15s ease;
     }
+    .resource + .resource {
+      border-top: 1px solid rgba(148, 163, 184, 0.06);
+    }
     .resource:hover {
-      background: rgba(255,255,255,0.05);
+      background: var(--row-hover);
     }
     .resource.dragging {
       opacity: 0.45;
@@ -188,9 +197,9 @@
     .badge {
       min-width: 36px;
       padding: 4px 6px;
-      border-radius: 8px;
+      border-radius: 6px;
       text-transform: uppercase;
-      letter-spacing: 0.6px;
+      letter-spacing: 0.5px;
       font-size: 10px;
       text-align: center;
       background: var(--badge-bg);
@@ -219,35 +228,41 @@
       min-width: 0;
     }
     .avatar {
-      width: 26px;
-      height: 26px;
-      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       font-size: 11px;
       font-weight: 600;
-      color: rgba(255,255,255,0.85);
+      color: rgba(15, 23, 42, 0.86);
       background: var(--avatar-bg);
     }
     .owner-actions {
       display: flex;
-      gap: 4px;
+      gap: 6px;
+      margin-left: auto;
     }
     .tiny-btn {
       width: 24px;
       height: 24px;
       border-radius: 6px;
-      border: 1px solid rgba(148,163,184,0.2);
-      background: rgba(15,23,42,0.4);
-      color: var(--text);
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      background: rgba(15, 23, 42, 0.4);
+      color: inherit;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
+      transition: background 0.15s ease;
     }
     .tiny-btn:hover {
-      background: rgba(255,255,255,0.08);
+      background: rgba(148, 163, 184, 0.28);
+    }
+    .tiny-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
     }
     .hidden {
       display: none !important;
@@ -256,51 +271,49 @@
       body {
         font-size: 12px;
       }
-      h1 {
-        font-size: 14px;
-      }
       .card {
-        padding: 14px;
+        gap: 10px;
+      }
+      .ghost-btn {
+        font-size: 11px;
+        padding: 5px 8px;
       }
     }
   </style>
 </head>
 <body>
   <div class="card" id="card">
-    <header>
-      <h1 id="title">Recursos</h1>
-      <div class="owner-tools hidden" id="owner-tools">
-        <button class="icon-btn" id="toggle-drawer" title="Abrir panel de edición">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 5v14m7-7H5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-      </div>
-    </header>
+    <div class="owner-bar" id="owner-bar">
+      <button class="ghost-btn locked" id="owner-toggle" type="button">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 11H7a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1ZM15 11V8a3 3 0 1 0-6 0v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span id="owner-toggle-label">Gestionar recursos</span>
+      </button>
+    </div>
 
-    <div class="drawer" id="drawer">
-      <div class="panel">
-        <div class="panel-row">
-          <label for="file">Subir archivo</label>
-          <input id="file" type="file" multiple />
-          <div class="panel-actions">
-            <button class="primary" id="upload">Añadir archivo</button>
-          </div>
+    <div class="drawer" id="drawer" aria-hidden="true">
+      <div class="form-group">
+        <h2>Archivos</h2>
+        <input id="file" type="file" multiple />
+        <div class="form-actions">
+          <button class="primary" id="upload" type="button">Subir archivos</button>
         </div>
-        <div class="panel-row">
-          <label for="shortcut-name">Nuevo acceso</label>
-          <input id="shortcut-name" type="text" placeholder="Ej. Manual de marca" />
-          <input id="shortcut-url" type="url" placeholder="https://app.clickup.com/..." />
-          <select id="shortcut-kind">
-            <option value="lista">Lista</option>
-            <option value="carpeta">Carpeta</option>
-            <option value="documento">Documento</option>
-            <option value="otro">Otro</option>
-          </select>
-          <div class="panel-actions">
-            <button id="add-shortcut">Guardar acceso</button>
-          </div>
-        </div>
-        <div class="panel-actions">
-          <button class="danger" id="clear">Vaciar todo</button>
+      </div>
+      <div class="form-group">
+        <h2>Accesos directos</h2>
+        <label for="shortcut-name">Nombre</label>
+        <input id="shortcut-name" type="text" placeholder="Ej. Manual de marca" />
+        <label for="shortcut-url">URL</label>
+        <input id="shortcut-url" type="url" placeholder="https://app.clickup.com/..." />
+        <label for="shortcut-kind">Tipo</label>
+        <select id="shortcut-kind">
+          <option value="lista">Lista</option>
+          <option value="carpeta">Carpeta</option>
+          <option value="documento">Documento</option>
+          <option value="otro">Otro</option>
+        </select>
+        <div class="form-actions">
+          <button id="add-shortcut" type="button">Guardar acceso</button>
+          <button class="danger" id="clear" type="button">Vaciar todo</button>
         </div>
       </div>
     </div>
@@ -312,11 +325,21 @@
   <script>
     const params = new URLSearchParams(location.search);
     const storageKey = 'clickup_resources_card:' + (params.get('key') || location.pathname);
+    const ownerStorageKey = storageKey + ':ownerUnlock';
+    const ownerKey = (params.get('ownerKey') || '').trim();
     const state = { resources: [] };
 
     const $ = (q) => document.querySelector(q);
-    const ownerMode = (params.get('owner') === '1') || (params.get('edit') === '1');
-    const viewOnly = !ownerMode;
+
+    let ownerMode = (params.get('owner') === '1') || (params.get('edit') === '1');
+    const storedUnlock = localStorage.getItem(ownerStorageKey);
+    if (!ownerMode && storedUnlock) {
+      if (!ownerKey || storedUnlock === ownerKey) {
+        ownerMode = true;
+      }
+    } else if (ownerMode) {
+      localStorage.setItem(ownerStorageKey, ownerKey || '1');
+    }
 
     function load() {
       try {
@@ -343,9 +366,30 @@
     }
 
     function renderAll() {
-      $('#title').textContent = decodeURIComponent(params.get('title') || 'Recursos');
-      $('#owner-tools').classList.toggle('hidden', viewOnly);
-      $('#drawer').classList.toggle('open', ownerMode && drawerOpen);
+      const toggle = $('#owner-toggle');
+      const toggleLabel = $('#owner-toggle-label');
+      toggle.classList.toggle('locked', !ownerMode);
+      toggleLabel.textContent = ownerMode
+        ? (drawerOpen ? 'Cerrar panel' : 'Gestionar recursos')
+        : 'Desbloquear gestión';
+      toggle.setAttribute('aria-pressed', ownerMode && drawerOpen ? 'true' : 'false');
+      toggle.setAttribute('aria-label', ownerMode
+        ? (drawerOpen ? 'Cerrar panel de gestión' : 'Abrir panel de gestión')
+        : 'Desbloquear panel de gestión');
+      const drawer = $('#drawer');
+      const drawerOpenState = ownerMode && drawerOpen;
+      toggle.dataset.state = ownerMode ? (drawerOpenState ? 'open' : 'ready') : 'locked';
+      toggle.setAttribute('aria-expanded', drawerOpenState ? 'true' : 'false');
+      drawer.classList.toggle('open', drawerOpenState);
+      drawer.setAttribute('aria-hidden', drawerOpenState ? 'false' : 'true');
+
+      $('#file').disabled = !ownerMode;
+      $('#shortcut-name').disabled = !ownerMode;
+      $('#shortcut-url').disabled = !ownerMode;
+      $('#shortcut-kind').disabled = !ownerMode;
+      $('#upload').disabled = !ownerMode;
+      $('#add-shortcut').disabled = !ownerMode;
+      $('#clear').disabled = !ownerMode;
 
       const list = $('#list');
       list.innerHTML = '';
@@ -486,47 +530,80 @@
       });
     }
 
-
-    if (!viewOnly) {
-      $('#upload').onclick = () => {
-        const input = $('#file');
-        if (!input.files.length) {
-          input.click();
-          return;
+    function attemptOwnerUnlock(forceOpen = false) {
+      if (ownerMode) return true;
+      if (ownerKey) {
+        const attempt = prompt('Introduce la clave de edición para gestionar los recursos:');
+        if (attempt === null) return false;
+        if (attempt === ownerKey) {
+          ownerMode = true;
+          drawerOpen = forceOpen ? true : drawerOpen;
+          localStorage.setItem(ownerStorageKey, ownerKey);
+          renderAll();
+          return true;
         }
-        handleFiles(input.files);
-      };
+        alert('Clave incorrecta.');
+        return false;
+      }
+      ownerMode = true;
+      drawerOpen = forceOpen ? true : drawerOpen;
+      localStorage.setItem(ownerStorageKey, '1');
+      renderAll();
+      return true;
+    }
 
-      $('#file').addEventListener('change', e => {
-        handleFiles(e.target.files);
-      });
+    $('#upload').addEventListener('click', () => {
+      if (!ownerMode && !attemptOwnerUnlock(true)) {
+        return;
+      }
+      const input = $('#file');
+      if (!input.files.length) {
+        input.click();
+        return;
+      }
+      handleFiles(input.files);
+    });
 
-      $('#add-shortcut').onclick = () => {
-        const name = $('#shortcut-name').value.trim();
-        const url = $('#shortcut-url').value.trim();
-        const kind = ($('#shortcut-kind').value || 'link').toLowerCase();
-        if (!name || !url) return;
-        state.resources.push({ type: 'shortcut', name, url, kind, addedAt: Date.now() });
-        $('#shortcut-name').value = '';
-        $('#shortcut-url').value = '';
-        $('#shortcut-kind').value = 'lista';
+    $('#file').addEventListener('change', e => {
+      if (!ownerMode) return;
+      handleFiles(e.target.files);
+    });
+
+    $('#add-shortcut').addEventListener('click', () => {
+      if (!ownerMode && !attemptOwnerUnlock(true)) {
+        return;
+      }
+      const name = $('#shortcut-name').value.trim();
+      const url = $('#shortcut-url').value.trim();
+      const kind = ($('#shortcut-kind').value || 'link').toLowerCase();
+      if (!name || !url) return;
+      state.resources.push({ type: 'shortcut', name, url, kind, addedAt: Date.now() });
+      $('#shortcut-name').value = '';
+      $('#shortcut-url').value = '';
+      $('#shortcut-kind').value = 'lista';
+      save();
+      renderAll();
+    });
+
+    $('#clear').addEventListener('click', () => {
+      if (!ownerMode && !attemptOwnerUnlock(true)) {
+        return;
+      }
+      if (confirm('¿Vaciar todos los recursos?')) {
+        state.resources = [];
         save();
         renderAll();
-      };
+      }
+    });
 
-      $('#clear').onclick = () => {
-        if (confirm('¿Vaciar todos los recursos?')) {
-          state.resources = [];
-          save();
-          renderAll();
-        }
-      };
-
-      $('#toggle-drawer').addEventListener('click', () => {
+    $('#owner-toggle').addEventListener('click', () => {
+      if (ownerMode) {
         drawerOpen = !drawerOpen;
         renderAll();
-      });
-    }
+        return;
+      }
+      attemptOwnerUnlock(true);
+    });
 
     const card = $('#card');
     card.addEventListener('dragover', e => {
@@ -537,9 +614,13 @@
     card.addEventListener('drop', e => {
       if (!e.dataTransfer) return;
       e.preventDefault();
-      if (!viewOnly && e.dataTransfer.files.length) {
+      if (!ownerMode) {
+        attemptOwnerUnlock(true);
+        return;
+      }
+      if (e.dataTransfer.files.length) {
         handleFiles(e.dataTransfer.files);
-      } else if (!viewOnly) {
+      } else {
         const text = e.dataTransfer.getData('text/uri-list') || e.dataTransfer.getData('text/plain');
         if (text && /^https?:\/\//i.test(text.trim())) {
           const link = text.trim();
@@ -551,7 +632,8 @@
     });
     window.addEventListener('paste', e => {
       const text = (e.clipboardData || window.clipboardData).getData('text');
-      if (!viewOnly && text && /^https?:\/\//i.test(text.trim())) {
+      if (!ownerMode) return;
+      if (text && /^https?:\/\//i.test(text.trim())) {
         const link = text.trim();
         state.resources.push({ type: 'shortcut', name: friendlyName(link) || link, url: link, kind: 'enlace', addedAt: Date.now() });
         save();
@@ -615,4 +697,3 @@
   </script>
 </body>
 </html>
-
