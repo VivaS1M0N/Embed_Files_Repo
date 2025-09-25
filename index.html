@@ -1,59 +1,507 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>Responsive Image Embed</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recursos - Upload de Archivos</title>
     <style>
-      :root {
-        /* Padding inside the card (tweak if you want a tiny breathing room) */
-        --pad: 0px;
-      }
-      html, body {
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        background: transparent; /* No background */
-      }
-      .stage {
-        position: fixed;
-        inset: 0;
-        display: grid;
-        place-items: center;    /* centers the image */
-        background: transparent; /* No background */
-        padding: var(--pad);
-        box-sizing: border-box;
-      }
-      img {
-        max-width: 100%;
-        max-height: 100%;
-        width: auto;
-        height: auto;
-        object-fit: contain; /* keep whole image inside the card */
-        display: block;
-        image-rendering: auto; /* let browser pick best quality */
-        -ms-interpolation-mode: bicubic; /* legacy smoothing */
-      }
-      /* Absolutely no borders/decoration */
-      body, .stage, img { border: none; box-shadow: none; }
-    </style>
-  </head>
-  <body>
-    <div class="stage">
-      <img id="logo" alt="embed image" referrerpolicy="no-referrer" />
-    </div>
-    <script>
-      // Use ?src= to pass an image URL. Falls back to your GitHub image by default.
-      const params = new URLSearchParams(window.location.search);
-      const fallback = "https://vivas1m0n.github.io/Embed_Files_Repo/images/logo%20redesign%20no%20bg%20min.png";
-      const src = params.get("src") || fallback;
-      document.getElementById("logo").src = src;
+        :root {
+            --clickup-bg: #f7f8fa;
+            --clickup-card-bg: #ffffff;
+            --clickup-border: #e0e0e0;
+            --clickup-text: #333333;
+            --clickup-primary: #7b68ee;
+        }
 
-      // Optional: allow tiny inner padding via ?pad=8 (in px)
-      const pad = params.get("pad");
-      if (pad !== null) {
-        document.documentElement.style.setProperty('--pad', `${parseInt(pad, 10)||0}px`);
-      }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --clickup-bg: #1d1e23;
+                --clickup-card-bg: #2d2e33;
+                --clickup-border: #404040;
+                --clickup-text: #e0e0e0;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: transparent;
+            color: var(--clickup-text);
+            padding: 0;
+            margin: 0;
+            width: 100%;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card {
+            background-color: var(--clickup-card-bg);
+            border-radius: 8px;
+            width: 100%;
+            padding: 16px;
+            height: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            margin-bottom: 16px;
+            font-weight: 600;
+            font-size: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-icon {
+            font-size: 18px;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--clickup-border);
+            border-radius: 6px;
+            padding: 24px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-bottom: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 140px;
+        }
+
+        .upload-area:hover, .upload-area.dragover {
+            border-color: var(--clickup-primary);
+            background-color: rgba(123, 104, 238, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+            color: var(--clickup-border);
+            transition: color 0.2s ease;
+        }
+
+        .upload-area:hover .upload-icon {
+            color: var(--clickup-primary);
+        }
+
+        .upload-text {
+            font-size: 14px;
+            margin-bottom: 12px;
+            color: var(--clickup-text);
+        }
+
+        .upload-button {
+            background-color: transparent;
+            border: 1px solid var(--clickup-primary);
+            color: var(--clickup-primary);
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .upload-button:hover {
+            background-color: rgba(123, 104, 238, 0.1);
+        }
+
+        .file-list {
+            margin-top: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 8px;
+            border-bottom: 1px solid var(--clickup-border);
+            font-size: 13px;
+            transition: background-color 0.2s;
+        }
+
+        .file-item:hover {
+            background-color: rgba(0, 0, 0, 0.03);
+        }
+
+        .file-item:last-child {
+            border-bottom: none;
+        }
+
+        .file-icon {
+            margin-right: 10px;
+            font-size: 18px;
+            flex-shrink: 0;
+            width: 24px;
+            text-align: center;
+        }
+
+        .file-info {
+            flex: 1;
+            min-width: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .file-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-weight: 500;
+        }
+
+        .file-details {
+            display: flex;
+            gap: 12px;
+            font-size: 11px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 6px;
+            flex-shrink: 0;
+        }
+
+        .file-action {
+            background: none;
+            border: 1px solid var(--clickup-border);
+            border-radius: 3px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 11px;
+            color: var(--clickup-text);
+            transition: all 0.2s ease;
+        }
+
+        .file-action:hover {
+            background-color: rgba(0, 0, 0, 0.05);
+            border-color: var(--clickup-primary);
+        }
+
+        .delete-btn:hover {
+            background-color: rgba(231, 76, 60, 0.1);
+            border-color: #e74c3c;
+            color: #e74c3c;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #888;
+            padding: 30px 20px;
+            font-size: 14px;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        /* File type icons */
+        .pdf-icon { color: #e74c3c; }
+        .doc-icon { color: #2c5aa0; }
+        .img-icon { color: #27ae60; }
+        .xls-icon { color: #2ecc71; }
+        .ppt-icon { color: #e67e22; }
+        .zip-icon { color: #9b59b6; }
+        .file-icon-default { color: #7f8c8d; }
+
+        /* Scrollbar styling */
+        .file-list::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .file-list::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .file-list::-webkit-scrollbar-thumb {
+            background: #ccc;
+            border-radius: 3px;
+        }
+
+        .file-list::-webkit-scrollbar-thumb:hover {
+            background: #aaa;
+        }
+
+        /* Status message */
+        .status-message {
+            font-size: 12px;
+            padding: 8px 12px;
+            border-radius: 4px;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+
+        .status-success {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: #27ae60;
+            display: block;
+        }
+
+        .status-error {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="card-header">
+            <div class="card-title">
+                <span class="card-icon">📂</span>
+                <span>Recursos</span>
+            </div>
+            <span class="file-count" id="fileCount">0 archivos</span>
+        </div>
+        
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📁</div>
+            <div class="upload-text">Arrastra archivos aquí o haz clic para subir</div>
+            <button class="upload-button">Adjuntar Archivos</button>
+            <input type="file" id="fileInput" class="hidden" multiple>
+        </div>
+        
+        <div class="status-message" id="statusMessage"></div>
+        
+        <div class="file-list" id="fileList">
+            <div class="empty-state">No hay archivos subidos aún</div>
+        </div>
+    </div>
+
+    <script>
+        // Generar un ID único para esta tarjeta
+        function generateCardId() {
+            // Intentar obtener un ID único del contexto de ClickUp
+            // Si estamos en un embed, usar el ID del elemento contenedor si está disponible
+            let cardId = 'clickup_card_' + Math.random().toString(36).substr(2, 9);
+            
+            // Si hay un elemento padre con un ID, usarlo para hacer el ID más único
+            if (window.frameElement && window.frameElement.id) {
+                cardId = window.frameElement.id + '_' + cardId;
+            }
+            
+            return cardId;
+        }
+
+        // Obtener el icono según el tipo de archivo
+        function getFileIcon(fileName) {
+            const ext = fileName.split('.').pop().toLowerCase();
+            if (ext === 'pdf') return '📕';
+            if (['doc', 'docx'].includes(ext)) return '📄';
+            if (['jpg', 'jpeg', 'png', 'gif', 'svg', 'bmp', 'webp'].includes(ext)) return '🖼️';
+            if (['xls', 'xlsx', 'csv'].includes(ext)) return '📊';
+            if (['ppt', 'pptx'].includes(ext)) return '📽️';
+            if (['zip', 'rar', '7z', 'tar', 'gz'].includes(ext)) return '📦';
+            if (['mp3', 'wav', 'flac', 'aac'].includes(ext)) return '🎵';
+            if (['mp4', 'avi', 'mov', 'wmv', 'flv'].includes(ext)) return '🎬';
+            return '📄';
+        }
+
+        // Obtener la clase CSS según el tipo de archivo
+        function getFileIconClass(fileName) {
+            const ext = fileName.split('.').pop().toLowerCase();
+            if (ext === 'pdf') return 'pdf-icon';
+            if (['doc', 'docx'].includes(ext)) return 'doc-icon';
+            if (['jpg', 'jpeg', 'png', 'gif', 'svg', 'bmp', 'webp'].includes(ext)) return 'img-icon';
+            if (['xls', 'xlsx', 'csv'].includes(ext)) return 'xls-icon';
+            if (['ppt', 'pptx'].includes(ext)) return 'ppt-icon';
+            if (['zip', 'rar', '7z', 'tar', 'gz'].includes(ext)) return 'zip-icon';
+            return 'file-icon-default';
+        }
+
+        // Formatear el tamaño del archivo
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        // Formatear la fecha
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+        }
+
+        // Mostrar mensaje de estado
+        function showStatus(message, isError = false) {
+            const statusElement = document.getElementById('statusMessage');
+            statusElement.textContent = message;
+            statusElement.className = isError ? 'status-message status-error' : 'status-message status-success';
+            
+            setTimeout(() => {
+                statusElement.style.display = 'none';
+            }, 3000);
+        }
+
+        // Inicializar la tarjeta
+        function initCard() {
+            const cardId = generateCardId();
+            console.log('Card ID:', cardId); // Para depuración
+            
+            const uploadArea = document.getElementById('uploadArea');
+            const fileInput = document.getElementById('fileInput');
+            const fileList = document.getElementById('fileList');
+            const fileCount = document.getElementById('fileCount');
+            
+            // Cargar archivos existentes para esta tarjeta
+            let files = JSON.parse(localStorage.getItem(cardId)) || [];
+            
+            // Renderizar archivos existentes
+            renderFiles();
+            
+            // Configurar eventos de clic
+            uploadArea.addEventListener('click', (e) => {
+                if (e.target.classList.contains('upload-button') || e.target === uploadArea) {
+                    fileInput.click();
+                }
+            });
+            
+            // Configurar eventos de arrastrar y soltar
+            uploadArea.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                uploadArea.classList.add('dragover');
+            });
+            
+            uploadArea.addEventListener('dragleave', () => {
+                uploadArea.classList.remove('dragover');
+            });
+            
+            uploadArea.addEventListener('drop', (e) => {
+                e.preventDefault();
+                uploadArea.classList.remove('dragover');
+                handleFiles(e.dataTransfer.files);
+            });
+            
+            // Configurar cambio de input de archivo
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files.length > 0) {
+                    handleFiles(fileInput.files);
+                    fileInput.value = ''; // Resetear input
+                }
+            });
+            
+            // Manejar archivos subidos
+            function handleFiles(newFiles) {
+                if (newFiles.length === 0) return;
+                
+                let addedCount = 0;
+                for (let i = 0; i < newFiles.length; i++) {
+                    // Verificar si el archivo ya existe
+                    const exists = files.some(f => f.name === newFiles[i].name && f.size === newFiles[i].size);
+                    
+                    if (!exists) {
+                        files.push({
+                            name: newFiles[i].name,
+                            size: newFiles[i].size,
+                            type: newFiles[i].type,
+                            lastModified: newFiles[i].lastModified,
+                            uploadDate: Date.now()
+                        });
+                        addedCount++;
+                    }
+                }
+                
+                if (addedCount > 0) {
+                    // Guardar en localStorage
+                    localStorage.setItem(cardId, JSON.stringify(files));
+                    
+                    // Actualizar UI
+                    renderFiles();
+                    
+                    // Mostrar mensaje de éxito
+                    showStatus(`${addedCount} archivo(s) agregado(s) correctamente`);
+                } else {
+                    showStatus('Los archivos ya existen', true);
+                }
+            }
+            
+            // Renderizar archivos en la lista
+            function renderFiles() {
+                fileList.innerHTML = '';
+                
+                if (files.length === 0) {
+                    fileList.innerHTML = '<div class="empty-state">No hay archivos subidos aún</div>';
+                    fileCount.textContent = '0 archivos';
+                    return;
+                }
+                
+                // Actualizar contador
+                fileCount.textContent = `${files.length} archivo(s)`;
+                
+                // Ordenar archivos por fecha de modificación (más reciente primero)
+                files.sort((a, b) => b.uploadDate - a.uploadDate);
+                
+                files.forEach((file, index) => {
+                    const fileItem = document.createElement('div');
+                    fileItem.className = 'file-item';
+                    
+                    fileItem.innerHTML = `
+                        <div class="file-icon ${getFileIconClass(file.name)}">${getFileIcon(file.name)}</div>
+                        <div class="file-info">
+                            <div class="file-name" title="${file.name}">${file.name}</div>
+                            <div class="file-details">
+                                <span>${formatFileSize(file.size)}</span>
+                                <span>•</span>
+                                <span>${formatDate(file.uploadDate)}</span>
+                            </div>
+                        </div>
+                        <div class="file-actions">
+                            <button class="file-action download-btn" data-index="${index}">Ver</button>
+                            <button class="file-action delete-btn" data-index="${index}">Eliminar</button>
+                        </div>
+                    `;
+                    
+                    fileList.appendChild(fileItem);
+                });
+                
+                // Agregar event listeners para los botones de eliminar
+                document.querySelectorAll('.delete-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const index = parseInt(e.target.getAttribute('data-index'));
+                        const fileName = files[index].name;
+                        files.splice(index, 1);
+                        localStorage.setItem(cardId, JSON.stringify(files));
+                        renderFiles();
+                        showStatus(`"${fileName}" eliminado correctamente`);
+                    });
+                });
+                
+                // Agregar event listeners para los botones de ver/descargar
+                document.querySelectorAll('.download-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const index = parseInt(e.target.getAttribute('data-index'));
+                        const file = files[index];
+                        showStatus(`Visualizando "${file.name}"`);
+                        // En una implementación real, aquí abrirías el archivo
+                    });
+                });
+            }
+        }
+        
+        // Inicializar la tarjeta cuando la página cargue
+        document.addEventListener('DOMContentLoaded', initCard);
     </script>
-  </body>
+</body>
 </html>
