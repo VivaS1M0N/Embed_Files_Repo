@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tarjeta de Recursos - Seguro</title>
+  <title>Tarjeta de Recursos - Mejorada</title>
   <style>
     :root {
       --pad: 12px;
@@ -20,14 +21,17 @@
       --warning: #f59e0b;
       color-scheme: dark;
     }
+
     * {
       box-sizing: border-box;
     }
+
     html,
     body {
       margin: 0;
       padding: 0;
     }
+
     body {
       font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
       font-size: 13px;
@@ -38,6 +42,7 @@
       width: 100%;
       min-height: 100%;
     }
+
     .card {
       width: 100%;
       flex: 1 1 auto;
@@ -47,11 +52,13 @@
       gap: 12px;
       padding: var(--pad) 0;
     }
+
     .owner-bar {
       display: flex;
       justify-content: flex-end;
       padding: 0 var(--pad);
     }
+
     .ghost-btn {
       display: inline-flex;
       align-items: center;
@@ -66,24 +73,30 @@
       cursor: pointer;
       transition: background 0.15s ease, border-color 0.15s ease;
     }
+
     .ghost-btn.locked {
       background: rgba(148, 163, 184, 0.08);
     }
+
     .ghost-btn[data-state='ready'] {
       background: rgba(148, 163, 184, 0.18);
       border-color: rgba(148, 163, 184, 0.24);
     }
+
     .ghost-btn[data-state='open'] {
       background: rgba(148, 163, 184, 0.28);
       border-color: rgba(148, 163, 184, 0.3);
     }
+
     .ghost-btn:hover {
       background: rgba(148, 163, 184, 0.2);
       border-color: rgba(148, 163, 184, 0.22);
     }
+
     .ghost-btn svg {
       opacity: 0.85;
     }
+
     .drawer {
       margin: 0 var(--pad);
       display: none;
@@ -94,9 +107,11 @@
       background: rgba(15, 23, 42, 0.34);
       border: 1px solid rgba(148, 163, 184, 0.18);
     }
+
     .drawer.open {
       display: flex;
     }
+
     .drawer h2 {
       margin: 0;
       font-size: 12px;
@@ -104,16 +119,19 @@
       text-transform: uppercase;
       color: var(--muted);
     }
+
     .form-group {
       display: grid;
       gap: 8px;
     }
+
     .form-group label {
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.4px;
       color: var(--muted);
     }
+
     .form-group input,
     .form-group select {
       width: 100%;
@@ -125,11 +143,13 @@
       font-size: 13px;
       outline: none;
     }
+
     .form-actions {
       display: flex;
       gap: 8px;
       flex-wrap: wrap;
     }
+
     .form-actions button {
       flex: 1 1 auto;
       padding: 8px 12px;
@@ -141,27 +161,33 @@
       cursor: pointer;
       transition: background 0.15s ease;
     }
+
     .form-actions button:disabled {
       opacity: 0.45;
       cursor: not-allowed;
     }
+
     .form-actions button.primary {
       background: linear-gradient(135deg, rgba(148, 163, 255, 0.95), rgba(118, 134, 255, 0.8));
       border-color: transparent;
       color: #0b1220;
     }
+
     .form-actions button.danger {
       color: #fecdd3;
       background: rgba(239, 68, 68, 0.18);
       border-color: rgba(239, 68, 68, 0.24);
     }
+
     .muted {
       color: var(--muted);
       font-size: 12px;
     }
+
     #empty {
       padding: 12px var(--pad) 0;
     }
+
     ul.resources {
       list-style: none;
       margin: 0;
@@ -170,6 +196,7 @@
       flex-direction: column;
       gap: 4px;
     }
+
     .resource {
       display: flex;
       align-items: center;
@@ -179,15 +206,19 @@
       border-radius: 10px;
       transition: background 0.15s ease;
     }
-    .resource + .resource {
+
+    .resource+.resource {
       border-top: 1px solid rgba(148, 163, 184, 0.06);
     }
+
     .resource:hover {
       background: var(--row-hover);
     }
+
     .resource.dragging {
       opacity: 0.45;
     }
+
     .resource a {
       flex: 1 1 auto;
       display: flex;
@@ -197,6 +228,7 @@
       color: inherit;
       min-width: 0;
     }
+
     .badge {
       min-width: 36px;
       padding: 4px 6px;
@@ -209,6 +241,7 @@
       color: var(--badge-text);
       font-weight: 600;
     }
+
     .primary-text {
       font-weight: 500;
       white-space: nowrap;
@@ -216,6 +249,7 @@
       text-overflow: ellipsis;
       font-size: 13px;
     }
+
     .secondary-text {
       font-size: 11px;
       color: var(--muted);
@@ -223,6 +257,7 @@
       overflow: hidden;
       text-overflow: ellipsis;
     }
+
     .meta {
       display: flex;
       flex-direction: column;
@@ -230,6 +265,7 @@
       flex: 1 1 auto;
       min-width: 0;
     }
+
     .avatar {
       width: 24px;
       height: 24px;
@@ -242,11 +278,13 @@
       color: rgba(15, 23, 42, 0.86);
       background: var(--avatar-bg);
     }
+
     .owner-actions {
       display: flex;
       gap: 6px;
       margin-left: auto;
     }
+
     .tiny-btn {
       width: 24px;
       height: 24px;
@@ -260,16 +298,20 @@
       cursor: pointer;
       transition: background 0.15s ease;
     }
+
     .tiny-btn:hover {
       background: rgba(148, 163, 184, 0.28);
     }
+
     .tiny-btn:disabled {
       opacity: 0.45;
       cursor: not-allowed;
     }
+
     .hidden {
       display: none !important;
     }
+
     .auth-modal {
       position: fixed;
       top: 0;
@@ -282,6 +324,7 @@
       justify-content: center;
       z-index: 1000;
     }
+
     .auth-form {
       background: rgba(15, 23, 42, 0.9);
       border: 1px solid rgba(148, 163, 184, 0.3);
@@ -293,11 +336,13 @@
       flex-direction: column;
       gap: 15px;
     }
+
     .auth-form h2 {
       margin: 0;
       font-size: 16px;
       text-align: center;
     }
+
     .auth-form input {
       width: 100%;
       padding: 10px;
@@ -306,6 +351,7 @@
       background: rgba(15, 23, 42, 0.6);
       color: inherit;
     }
+
     .auth-form button {
       padding: 10px;
       border-radius: 8px;
@@ -315,6 +361,7 @@
       font-weight: 600;
       cursor: pointer;
     }
+
     .user-info {
       display: flex;
       align-items: center;
@@ -322,6 +369,7 @@
       font-size: 12px;
       color: var(--muted);
     }
+
     .user-avatar {
       width: 24px;
       height: 24px;
@@ -333,6 +381,7 @@
       font-weight: 600;
       font-size: 10px;
     }
+
     .permission-badge {
       padding: 2px 6px;
       border-radius: 4px;
@@ -340,32 +389,67 @@
       font-weight: 600;
       text-transform: uppercase;
     }
+
     .permission-admin {
       background: var(--success);
       color: #0b1220;
     }
+
     .permission-editor {
       background: var(--warning);
       color: #0b1220;
     }
+
     .permission-viewer {
       background: var(--muted);
       color: #0b1220;
     }
+
+    .admin-controls {
+      display: flex;
+      gap: 8px;
+      margin-left: 12px;
+      padding-left: 12px;
+      border-left: 1px solid rgba(148, 163, 184, 0.2);
+    }
+
+    .admin-btn {
+      padding: 4px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(148, 163, 184, 0.3);
+      background: rgba(148, 163, 184, 0.1);
+      color: inherit;
+      font-size: 11px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+
+    .admin-btn:hover {
+      background: rgba(148, 163, 184, 0.2);
+    }
+
     @media (max-width: 480px) {
       body {
         font-size: 12px;
       }
+
       .card {
         gap: 10px;
       }
+
       .ghost-btn {
         font-size: 11px;
         padding: 5px 8px;
       }
+
+      .admin-controls {
+        flex-direction: column;
+        gap: 4px;
+      }
     }
   </style>
 </head>
+
 <body>
   <div class="card" id="card">
     <div class="owner-bar" id="owner-bar">
@@ -373,7 +457,10 @@
         <div class="user-avatar" id="user-avatar"></div>
         <span id="user-name"></span>
         <span class="permission-badge" id="user-permission"></span>
-        <button class="ghost-btn" id="logout-btn" type="button">Cerrar sesión</button>
+        <div class="admin-controls" id="admin-controls" style="display: none;">
+          <button class="admin-btn" id="toggle-login-btn" type="button">👁️ Ocultar Login</button>
+          <button class="admin-btn" id="logout-btn" type="button">🔓 Cerrar sesión</button>
+        </div>
       </div>
       <button class="ghost-btn locked" id="owner-toggle" type="button">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M17 11H7a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h10a1 1 0 0 0 1-1v-7a1 1 0 0 0-1-1ZM15 11V8a3 3 0 1 0-6 0v3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -425,16 +512,13 @@
 
   <script>
     // ===== CONFIGURACIÓN DE SEGURIDAD =====
-    // CONFIGURE AQUÍ LOS USUARIOS AUTORIZADOS
     const AUTHORIZED_USERS = {
-      // TU USUARIO (el creador) - MODIFICA ESTO
       "Simon": {
-        password: "T3chAdm1n2025", // CAMBIA ESTA CONTRASEÑA
-        name: "Simon", // CAMBIA POR TU NOMBRE
+        password: "T3chAdm1n2025",
+        name: "Simon",
         permission: "admin",
-        isCreator: true  // ← ESTE USUARIO VERÁ EL BOTÓN DE LOGIN
+        isCreator: true
       },
-      // Usuarios adicionales (NO verán el botón de login)
       "editor1": {
         password: "editor123",
         name: "Editor 1",
@@ -449,12 +533,13 @@
       }
     };
 
-    // Configuración de seguridad
+    // Configuración de seguridad MEJORADA
     const SECURITY_CONFIG = {
-      sessionTimeout: 60 * 60 * 1000, // 1 hora en milisegundos
-      encryptionKey: "clave-secreta-de-encriptacion", // Cambia esta clave
-      requireAuthForView: false,
-      hideLoginForNonCreators: true  // ← OCULTAR LOGIN PARA NO-CREADORES
+      sessionTimeout: 60 * 60 * 1000,
+      encryptionKey: "clave-secreta-de-encriptacion",
+      requireAuthForView: false, // ← Cambiado a false para que todos vean
+      hideLoginForNonCreators: true,
+      showLoginButton: localStorage.getItem('showLoginButton') !== 'false' // ← Nueva preferencia
     };
 
     // ===== FIN DE CONFIGURACIÓN =====
@@ -472,7 +557,7 @@
     let drawerOpen = false;
     let sessionTimeoutId = null;
 
-    // Nombres amigables para las tarjetas (MEJORA OPCIONAL)
+    // Nombres amigables para las tarjetas
     const cardNames = {
       'aboutus': 'About Us',
       'ventas': 'Documentación de Ventas',
@@ -503,15 +588,28 @@
       }
     }
 
-    // === NUEVA FUNCIÓN: Decide si mostrar el botón de login ===
+    // === NUEVA FUNCIÓN: Control de visibilidad del login ===
+    function toggleLoginVisibility() {
+      SECURITY_CONFIG.showLoginButton = !SECURITY_CONFIG.showLoginButton;
+      localStorage.setItem('showLoginButton', SECURITY_CONFIG.showLoginButton);
+      
+      const toggleBtn = $('#toggle-login-btn');
+      toggleBtn.textContent = SECURITY_CONFIG.showLoginButton ? 
+        '👁️ Ocultar Login' : '👁️ Mostrar Login';
+      
+      updateUI();
+    }
+
     function shouldShowLoginButton() {
-      // Si la configuración dice ocultar para no-creadores
+      // Si la configuración global dice ocultar
+      if (!SECURITY_CONFIG.showLoginButton) return false;
+      
+      // Lógica original
       if (SECURITY_CONFIG.hideLoginForNonCreators) {
-        // Verificar si hay algún usuario creador en la configuración
         const hasCreatorUser = Object.values(AUTHORIZED_USERS).some(user => user.isCreator);
-        return hasCreatorUser; // Solo mostrar si hay un usuario creador configurado
+        return hasCreatorUser;
       }
-      return true; // Mostrar siempre (comportamiento original)
+      return true;
     }
 
     // Gestión de sesiones
@@ -526,7 +624,6 @@
       const encryptedSession = simpleEncrypt(JSON.stringify(sessionData), SECURITY_CONFIG.encryptionKey);
       sessionStorage.setItem(sessionKey, encryptedSession);
       
-      // Configurar timeout de sesión
       if (sessionTimeoutId) clearTimeout(sessionTimeoutId);
       sessionTimeoutId = setTimeout(endSession, SECURITY_CONFIG.sessionTimeout);
       
@@ -546,13 +643,11 @@
       try {
         const sessionData = JSON.parse(sessionDataStr);
         
-        // Verificar si la sesión ha expirado
         if (Date.now() > sessionData.expires) {
           endSession();
           return false;
         }
         
-        // Verificar que el usuario todavía está autorizado
         if (!AUTHORIZED_USERS[sessionData.user]) {
           endSession();
           return false;
@@ -563,7 +658,6 @@
           ...AUTHORIZED_USERS[sessionData.user]
         };
         
-        // Renovar la sesión
         startSession(currentUser);
         return true;
       } catch (e) {
@@ -605,14 +699,10 @@
       if (!currentUser) return false;
       
       switch (currentUser.permission) {
-        case 'admin':
-          return true; // Los administradores pueden hacer todo
-        case 'editor':
-          return action !== 'clear'; // Los editores no pueden vaciar todo
-        case 'viewer':
-          return action === 'view'; // Los viewers solo pueden ver
-        default:
-          return false;
+        case 'admin': return true;
+        case 'editor': return action !== 'clear';
+        case 'viewer': return action === 'view';
+        default: return false;
       }
     }
 
@@ -620,6 +710,7 @@
       const userInfo = $('#user-info');
       const ownerToggle = $('#owner-toggle');
       const drawer = $('#drawer');
+      const adminControls = $('#admin-controls');
       
       if (currentUser) {
         // Mostrar información del usuario
@@ -629,21 +720,30 @@
         $('#user-permission').textContent = currentUser.permission;
         $('#user-permission').className = `permission-badge permission-${currentUser.permission}`;
         
-        // === MODIFICADO: Solo mostrar botón de gestión si eres el creador ===
+        // Mostrar controles de admin si es administrador
+        if (currentUser.permission === 'admin') {
+          adminControls.style.display = 'flex';
+          $('#toggle-login-btn').textContent = SECURITY_CONFIG.showLoginButton ? 
+            '👁️ Ocultar Login' : '👁️ Mostrar Login';
+        } else {
+          adminControls.style.display = 'none';
+        }
+        
+        // Botón de gestión para creadores
         if (currentUser.isCreator) {
           ownerToggle.style.display = 'flex';
           ownerToggle.classList.remove('locked');
           ownerToggle.dataset.state = drawerOpen ? 'open' : 'ready';
           $('#owner-toggle-label').textContent = drawerOpen ? 'Cerrar panel' : 'Gestionar recursos';
         } else {
-          ownerToggle.style.display = 'none'; // ← OCULTAR BOTÓN
+          ownerToggle.style.display = 'none';
         }
         
-        // Mostrar/ocultar panel según permisos
+        // Panel de gestión
         const canEdit = hasPermission('edit');
         drawer.classList.toggle('open', drawerOpen && canEdit);
         
-        // Habilitar/deshabilitar controles según permisos
+        // Controles según permisos
         $('#file').disabled = !hasPermission('upload');
         $('#shortcut-name').disabled = !hasPermission('edit');
         $('#shortcut-url').disabled = !hasPermission('edit');
@@ -653,23 +753,24 @@
         $('#clear').disabled = !hasPermission('clear');
         
       } else {
-        // Ocultar información del usuario
+        // Usuario no autenticado
         userInfo.style.display = 'none';
+        adminControls.style.display = 'none';
         
-        // === MODIFICADO: Solo mostrar botón de inicio de sesión si es apropiado ===
+        // Mostrar/ocultar botón de login según preferencia
         if (shouldShowLoginButton()) {
           ownerToggle.style.display = 'flex';
           ownerToggle.classList.add('locked');
           ownerToggle.dataset.state = 'locked';
           $('#owner-toggle-label').textContent = 'Iniciar sesión';
         } else {
-          ownerToggle.style.display = 'none'; // ← OCULTAR BOTÓN
+          ownerToggle.style.display = 'none';
         }
         
         // Ocultar panel de gestión
         drawer.classList.remove('open');
         
-        // Deshabilitar todos los controles
+        // Deshabilitar controles
         $('#file').disabled = true;
         $('#shortcut-name').disabled = true;
         $('#shortcut-url').disabled = true;
@@ -704,7 +805,6 @@
             const parsed = JSON.parse(decrypted);
             Object.assign(state, parsed);
             
-            // Compatibilidad con versiones anteriores
             if (!Array.isArray(state.resources) && Array.isArray(parsed.images)) {
               state.resources = parsed.images.map((src, index) => ({
                 type: 'shortcut',
@@ -728,12 +828,13 @@
       localStorage.setItem(storageKey, encrypted);
     }
 
+    // === CAMBIO IMPORTANTE: Archivos se abren en nueva pestaña ===
     function renderResources() {
       const list = $('#list');
       list.innerHTML = '';
       
-      // Verificar si el usuario puede ver los recursos
-      const canView = hasPermission('view') || !SECURITY_CONFIG.requireAuthForView;
+      // === CAMBIO: Todos pueden ver los recursos ===
+      const canView = true; // Simplificado - todos pueden ver
       
       if (!canView) {
         $('#empty').textContent = 'Inicia sesión para ver los recursos';
@@ -757,9 +858,13 @@
 
         const link = document.createElement('a');
         link.draggable = false;
+        
+        // === CAMBIO IMPORTANTE: Comportamiento como ClickUp Resources ===
         if (item.type === 'file') {
           link.href = item.data;
-          link.download = item.name;
+          link.target = '_blank'; // Abre en nueva pestaña
+          link.rel = 'noopener';
+          // Quitamos link.download para que no descargue automáticamente
         } else {
           link.href = item.url;
           link.target = '_blank';
@@ -937,7 +1042,6 @@
       return initials.toUpperCase();
     }
 
-    // === MEJORA OPCIONAL: Mensaje personalizado al vaciar ===
     function getCardDisplayName() {
       return cardNames[cardKey] || `la tarjeta "${cardKey}"`;
     }
@@ -948,16 +1052,18 @@
         drawerOpen = !drawerOpen;
         updateUI();
       } else {
-        // === MODIFICADO: Verificar si debería mostrar el login ===
         if (shouldShowLoginButton()) {
           showAuthModal();
         }
-        // Si no debería mostrar login, no hacer nada
       }
     });
 
     $('#logout-btn').addEventListener('click', () => {
       endSession();
+    });
+
+    $('#toggle-login-btn').addEventListener('click', () => {
+      toggleLoginVisibility();
     });
 
     $('#auth-submit').addEventListener('click', () => {
@@ -1034,7 +1140,6 @@
       renderResources();
     });
 
-    // === MEJORA OPCIONAL IMPLEMENTADA: Mensaje personalizado al vaciar ===
     $('#clear').addEventListener('click', () => {
       if (!hasPermission('clear')) {
         alert('No tienes permisos para vaciar todos los recursos');
@@ -1097,13 +1202,10 @@
     document.addEventListener('DOMContentLoaded', () => {
       loadResources();
       
-      // Verificar si hay una sesión activa
       if (checkSession()) {
         updateUI();
       } else {
-        // Si requiere autenticación para ver, mostrar modal inmediatamente
         if (SECURITY_CONFIG.requireAuthForView) {
-          // Pero solo si debería mostrar el botón de login
           if (shouldShowLoginButton()) {
             showAuthModal();
           }
@@ -1114,4 +1216,5 @@
     });
   </script>
 </body>
+
 </html>
