@@ -441,8 +441,8 @@
 	  display: inline-flex;
 	  align-items: center;
 	  justify-content: center;
-	  width: 60px;              /* ↑ antes 32px */
-	  height: 60px;             /* ↑ antes 32px */
+	  width: 50px;              /* ↑ antes 32px */
+	  height: 50px;             /* ↑ antes 32px */
 	  padding: 0;
 	  border-radius: 50%;
 	  background: rgba(0, 0, 0, 0.45);
@@ -967,6 +967,16 @@
         li.dataset.index = idx;
 
         const link = document.createElement('a');
+		
+		// Manejo robusto del click (abre confiable en ClickUp)
+		link.addEventListener('click', (ev) => {
+		  ev.preventDefault();
+		  const url = (item.type === 'file')
+			? objectUrlFromDataUrl(item.data)  // para archivos guardados como dataURL
+			: item.url;
+		  openExtern(url);
+		});
+		
         link.draggable = false;
         
         // Comportamiento como ClickUp Resources
@@ -1011,6 +1021,29 @@
 
         if (hasPermission('edit')) {
           const ownerBar = document.createElement('div');
+		  
+		  if (item.type === 'file') {
+		    const dl = document.createElement('button');
+		    dl.className = 'tiny-btn';
+		    dl.title = 'Descargar';
+		    dl.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+		    dl.addEventListener('click', (ev) => {
+			  ev.preventDefault();
+			  ev.stopPropagation();
+			  const url = objectUrlFromDataUrl(item.data);
+			  const a = document.createElement('a');
+			  a.href = url;
+			  a.download = item.name || 'archivo';
+			  document.body.appendChild(a);
+			  a.click();
+			  a.remove();
+			  // Limpia el objectURL si se creó
+			  try { if (url.startsWith('blob:')) URL.revokeObjectURL(url); } catch {}
+		    });
+		    ownerBar.appendChild(dl);
+		  }
+
+		  
           ownerBar.className = 'owner-actions';
 
           const drag = document.createElement('button');
@@ -1154,6 +1187,43 @@
     function getCardDisplayName() {
       return cardNames[cardKey] || `la tarjeta "${cardKey}"`;
     }
+	
+	// Abre URL escapando el iframe cuando se permite (ClickUp)
+	function openExtern(url) {
+	  try {
+		const win = window.top || window;
+		const opened = win.open(url, '_blank', 'noopener');
+		if (!opened) {
+		  // Fallback: click programático
+		  const a = document.createElement('a');
+		  a.href = url;
+		  a.target = '_blank';
+		  a.rel = 'noopener';
+		  document.body.appendChild(a);
+		  a.click();
+		  a.remove();
+		}
+	  } catch (e) {
+		window.open(url, '_blank');
+	  }
+	}
+
+	// Convierte dataURL → Blob → objectURL (mejor compatibilidad para abrir/descargar)
+	function dataUrlToBlob(dataUrl) {
+	  const parts = dataUrl.split(',');
+	  const match = /^data:(.*?);base64$/.exec(parts[0]) || [];
+	  const mime = match[1] || 'application/octet-stream';
+	  const bin = atob(parts[1] || '');
+	  const bytes = new Uint8Array(bin.length);
+	  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
+	  return new Blob([bytes], { type: mime });
+	}
+
+	function objectUrlFromDataUrl(dataUrl) {
+	  try { return URL.createObjectURL(dataUrlToBlob(dataUrl)); }
+	  catch { return dataUrl; }
+	}
+
 
     // Event listeners
     $('#owner-toggle').addEventListener('click', () => {
